@@ -42,7 +42,7 @@ describe MethodAddable, "を継承したclass Fruitを定義したとき" do
 
 end
 
-describe MethodAddable, "を継承したcFruitのインスタンスを作成したとき" do
+describe MethodAddable, "を継承したclass Fruitのインスタンスを作成したとき" do
 
   before do
     Fruit.add(*FruitSpecArgsSample)
