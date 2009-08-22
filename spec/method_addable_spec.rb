@@ -24,7 +24,7 @@ FruitSpecArgsSample = [
   }
 ]
 
-describe "MethodAddableを継承したclass Fruitを定義する場合" do
+describe MethodAddable, "を継承したclass Fruitを定義したとき" do
 
   it "メソッドcolor(:apple),price(:apple)を追加できること" do
     Fruit.add(*FruitSpecArgsSample)
@@ -42,7 +42,7 @@ describe "MethodAddableを継承したclass Fruitを定義する場合" do
 
 end
 
-describe "Fruitのインスタンスを作成したとき" do
+describe MethodAddable, "を継承したcFruitのインスタンスを作成したとき" do
 
   before do
     Fruit.add(*FruitSpecArgsSample)
