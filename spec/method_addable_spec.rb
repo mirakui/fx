@@ -70,8 +70,6 @@ describe "Fruitのインスタンスを作成したとき" do
     @fruit.color(:nil_fruit, :apple).should == "red"
   end
 
-  # after do
-  # end
 end
 
 

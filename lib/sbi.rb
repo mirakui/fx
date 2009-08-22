@@ -84,7 +84,7 @@ class Sbi < Gena::MethodAddable
       prices   = {}
       (page / 'b').each_with_index do |b, i|
         price_pair = b.text.strip.split('-')
-        prices[meigaras[i]] = {:bid => price_pair[0], :ask => price_pair[1]}
+        prices[meigaras[i]] = {:bid => price_pair[0].to_f, :ask => price_pair[1].to_f}
       end
       prices
     }
