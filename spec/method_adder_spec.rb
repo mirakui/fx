@@ -2,7 +2,7 @@
 $: << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'method_adder'
 
-class MethodAdderSub
+class Fruit < Gena::MethodAdder
 
   def initialize(value)
     @value = value
@@ -13,39 +13,53 @@ class MethodAdderSub
   end
 end
 
-describe "MethodAdderをincludeしたclass MethodAdderSubを定義する場合" do
+FruitSpecArgsSample = [
+  :apple ,{
+    :color => proc {
+      "red"
+    },
+    :price => proc {
+      value
+    }
+  }
+]
+
+describe "MethodAdderを継承したclass Fruitを定義する場合" do
+
+  it "メソッドcolor(:apple),price(:apple)を追加できること" do
+    Fruit.add(*FruitSpecArgsSample)
+    Fruit.method_defined?("__color_apple").should be_true
+    Fruit.method_defined?("__price_apple").should be_true
+  end
+
+  it "メソッドcolorが追加されていること" do
+    Fruit.method_defined?("__color_apple").should be_true
+  end
+
+  it "メソッドpriceが追加されていること" do
+    Fruit.method_defined?("__price_apple").should be_true
+  end
+
+end
+
+describe "Fruitのインスタンスを作成したとき" do
+
   before do
-    MethodAdderSub.include Gena::MethodAdder
+    Fruit.add(*FruitSpecArgsSample)
+    @fruit = Fruit.new(100)
   end
 
-  it "メソッドsay(:hello),say(:value)を追加できること" do
-    MethodAdderSub.send(:add_say ,{
-      :hello => proc {
-        "hello!"
-      },
-      :value => proc {
-        value
-      }
-    })
-    MethodAdderSub.protected_method_defined?("__say_hello").should be_true
-    MethodAdderSub.protected_method_defined?("__say_value").should be_true
+  it "メソッドcolor(:apple)が'red'を返すこと" do
+    @fruit.should_not be_nil
+    @fruit.color(:apple).should == 'red'
   end
 
-  it "MethodAdderSubのインスタンスが作成できること" do
-    @sub = MethodAdderSub.new(100)
-    @sub.should_not be_nil
+  it "メソッドprice(:apple)がFruitのメンバ関数を参照できること" do
+    @fruit.price(:apple).should == 100
   end
 
-  it "メソッドsay(:hello)が'hello'を返すこと" do
-    @sub.say(:hello).should == 'hello'
-  end
-
-  it "メソッドsay(:value)がMethodAdderSubのメンバ関数を参照できること" do
-    @sub.say(:value).should == 100
-  end
-
-  after do
-  end
+  # after do
+  # end
 end
 
 

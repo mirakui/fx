@@ -149,7 +149,7 @@ class Sbi
       go(sym) unless now?(sym)
     end
 
-    add_page(:pboard
+    add_page(:pboard,
       :now? => proc {
         page.uri =~ %r(pboard)
       },
