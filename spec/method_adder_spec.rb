@@ -33,11 +33,11 @@ describe "MethodAdderを継承したclass Fruitを定義する場合" do
   end
 
   it "メソッドcolorが追加されていること" do
-    Fruit.method_defined?("__color_apple").should be_true
+    Fruit.method_defined?("color").should be_true
   end
 
   it "メソッドpriceが追加されていること" do
-    Fruit.method_defined?("__price_apple").should be_true
+    Fruit.method_defined?("price").should be_true
   end
 
 end
@@ -46,6 +46,7 @@ describe "Fruitのインスタンスを作成したとき" do
 
   before do
     Fruit.add(*FruitSpecArgsSample)
+    Fruit.add(:nil_fruit, :color => proc { nil })
     @fruit = Fruit.new(100)
   end
 
@@ -56,6 +57,17 @@ describe "Fruitのインスタンスを作成したとき" do
 
   it "メソッドprice(:apple)がFruitのメンバ関数を参照できること" do
     @fruit.price(:apple).should == 100
+  end
+
+  it "メソッドcolor(:nil_fruit)が追加できること" do
+    Fruit.method_defined?("__color_nil_fruit").should be_true
+    @fruit.color(:nil_fruit).should be_nil
+  end
+
+  it "nounを複数指定したメソッドがちゃんと動くこと" do
+    Fruit.method_defined?("__color_nil_fruit").should be_true
+    Fruit.method_defined?("color").should be_true
+    @fruit.color(:nil_fruit, :apple).should == "red"
   end
 
   # after do

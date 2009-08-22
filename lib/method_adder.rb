@@ -9,10 +9,10 @@ module Gena
 
         unless method_defined?(verb)
           puts "method not defined '#{verb}'"
-          define_method(verb, prc_buf = proc {|*syms|
+          define_method(verb, proc {|*syms|
             if syms.count >= 2
               syms.each do |sym|
-                res = prc_buf.call(sym)
+                res = __send__(verb, sym)
                 return res if res
               end
               return nil
