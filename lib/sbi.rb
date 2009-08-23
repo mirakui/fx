@@ -39,6 +39,7 @@ class Sbi < Market
     end
 
     def reload_prices
+      go(:pboard)
       parse(:pboard)
     end
 
