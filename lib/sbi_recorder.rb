@@ -1,16 +1,11 @@
-$: << File.join(File.dirname(__FILE__), '..', 'lib')
-require 'loggable'
+$: << File.join(File.dirname(__FILE__), '..', 'config')
+require 'environment'
+
 require 'date'
+require 'market_recorder'
 require 'sbi'
 
-class SbiRecorder
-
-  include Gena::Loggable
-
-  BASE_DIR  = File.join(File.dirname(__FILE__), '..')
-  LOG_DIR   = File.join(BASE_DIR, 'log')
-  PRICE_DIR = File.join(LOG_DIR,  'price')
-  RECORD_CURRENCIES = ["USD/JPY", "EUR/JPY", "GBP/JPY"]
+class SbiRecorder < MarketRecorder
 
   def initialize(sbi)
     @sbi = sbi
@@ -18,7 +13,8 @@ class SbiRecorder
 
   def record
     prices = @sbi.prices
-    RECORD_CURRENCIES.each do |currency|
+    logger.debug "Record currency=[#{RECORD_CURRENCIES.join(',')}]"
+    ::RECORD_CURRENCIES.each do |currency|
       write(currency, prices[currency])
     end
   end
@@ -32,15 +28,8 @@ class SbiRecorder
 
   def record_file_path(currency)
     record_file_name = "price.#{currency.sub('/','_')}.#{Date.today.to_s}"
-    File.join PRICE_DIR, record_file_name
+    File.join ::PRICE_DIR, record_file_name
   end
 
 end
-
-__END__
-
-sbi = Sbi.new
-rec = SbiRecorder.new(sbi)
-
-rec.record
 

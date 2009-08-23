@@ -1,16 +1,15 @@
 require 'loggable'
 
-class Market
+class Strategy
 
   include Gena::Loggable
 
-  def reload_prices
-    raise 'must be overriden'
+  def initialize(trader)
+    @trader = trader
   end
 
-  def prices
+  def calc(price)
     raise 'must be overriden'
   end
 
 end
-

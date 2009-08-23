@@ -7,8 +7,6 @@ class Sbi < Market
   USER_AGENT_MOBILE = 'SoftBank/1.0/912SH/SHJ001/SN123456789012345 Browser/NetFront/3.4'
   URI_BASE = 'https://mobile.sbisec.co.jp'
 
-  include Gena::Loggable
-
   def initialize
     @transit = SbiTransit.new
   end
