@@ -6,37 +6,21 @@ module Gena
 
     include Loggable
 
-    attr_accessor :pid_file
+    attr_accessor :pid_file, :console_mode
 
     def initialize(daemon_name, pid_file_path)
       @daemon_name = daemon_name
       @pid_file = PidFile.new(pid_file_path)
       #@pid_file = PidFile.new(File.join(File.dirname(__FILE__), '..', 'log', "#{@daemon_name}.pid"))
+      @console_mode = false
     end
 
+    # http://snippets.dzone.com/posts/show/2265
     def start
-      # FIXME
-      # @pid_file.logger = logger
-      # http://snippets.dzone.com/posts/show/2265
-      fork do
-        Process.setsid
-        exit if fork
-        STDIN.reopen "/dev/null"
-        STDOUT.reopen "/dev/null", "a"
-        STDERR.reopen STDOUT
-
-        $PROGRAM_NAME = @daemon_name
-
-        logger.info "Daemon #{@daemon_name} Started ##{$$}"
-        @pid_file.write
-        Signal.trap(:TERM) do
-          trapped(:TERM)
-        end
-
-        run
-
-        @pid_file.delete
-        logger.info 'Stopped'
+      if @console_mode
+        start_console
+      else
+        start_daemon
       end
     end
 
@@ -45,19 +29,47 @@ module Gena
     end
 
     def stop
-      # FIXME
-      # @pid_file.logger = logger
       @pid_file.kill(:TERM)
     end
 
     def alive?
-      # FIXME
-      # @pid_file.logger = logger
       @pid_file.alive?
     end
 
     def run
       raise 'must be overriden'
+    end
+
+    private
+    def start_console
+      $PROGRAM_NAME = @daemon_name
+
+      logger.info "Daemon #{@daemon_name} Started ##{$$}"
+      @pid_file.write
+      Signal.trap(:TERM) do
+        trapped(:TERM)
+      end
+
+      run
+
+      @pid_file.delete
+      logger.info 'Stopped'
+    rescue StandardError => e
+      logger.error [e.to_s, e.backtrace].flatten.join("\n\t")
+    rescue Object => e
+      logger.error "Unexpected Exception: #{e.inspect}"
+    end
+
+    def start_daemon
+      fork do
+        Process.setsid
+        exit if fork
+        STDIN.reopen "/dev/null"
+        STDOUT.reopen "/dev/null", "a"
+        STDERR.reopen STDOUT
+
+        start_console
+      end
     end
 
   end

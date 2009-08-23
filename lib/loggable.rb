@@ -1,11 +1,22 @@
 require 'logger'
-require 'pit'
 
 module Gena
 
   module Loggable
 
     def logger
+      LoggerHolder.logger
+    end
+
+    def logger=(logger)
+      LoggerHolder.logger = logger
+    end
+
+  end
+
+  class LoggerHolder
+    
+    def self.logger
       unless defined? @logger
         @logger = Logger.new(STDOUT)
         @logger.level = Logger::DEBUG
@@ -13,10 +24,9 @@ module Gena
       @logger
     end
 
-    def logger=(logger)
+    def self.logger=(logger)
       @logger = logger
     end
-
   end
 
 end

@@ -1,4 +1,5 @@
 require 'mechanize'
+require 'pit'
 require 'loggable'
 require 'method_addable'
 require 'market'
@@ -31,7 +32,6 @@ class Sbi < Market
       @agent = WWW::Mechanize.new
       @agent.user_agent = USER_AGENT_MOBILE
       @prices_buffer = nil
-      #@agent.logger = logger
     end
     
     def prices

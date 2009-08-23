@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby1.9
+$: << File.join(File.dirname(__FILE__), '..', 'config')
+require 'environment'
+require 'fx_daemon'
+
+def main
+  logger = Logger.new(STDOUT)
+  logger.level = Logger::DEBUG
+
+  fxd = FxDaemon.new
+  fxd.logger = logger
+  if fxd.alive?
+    fxd.stop
+    logger.info "Daemon Stopped"
+  else
+    logger.info "Daemon not alive"
+  end
+rescue StandardError => e
+  logger.error [e.to_s, e.backtrace].flatten.join("\n\t")
+rescue Object => e
+  logger.error "Unexpected Exception: #{e.inspect}"
+end
+
+main
+

@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby1.9
+$: << File.join(File.dirname(__FILE__), '..', 'config')
+require 'environment'
+require 'fx_daemon'
+require 'optparse'
+
+def main
+  recipe_required = false
+  console_mode    = false
+
+  ARGV.options do |opt|
+    opt.on('-r', '--recipe [RECIPE_NAME]') do |recipe_name|
+      require File.join(::CONFIG_DIR, "#{recipe_name}.recipe")
+      recipe_required = true
+    end
+    opt.on('--debug') do
+      $DEBUG = true
+    end
+    opt.on('--console') do
+      console_mode = true
+    end
+    opt.order!
+    unless recipe_required
+      STDERR.puts opt.help
+      exit 1
+    end
+  end
+
+  begin
+    log_path = File.join(LOG_DIR, 'fxd.log')
+    logger = Logger.new(console_mode ? STDOUT : log_path, 'daily')
+    #logger = Logger.new(log_path, 'daily')
+    logger.level = $DEBUG ? Logger::DEBUG : Logger::INFO
+
+    fxd = FxDaemon.new
+    fxd.logger = logger
+    fxd.console_mode = console_mode
+
+    if fxd.alive?
+      logger.error 'Daemon Already Running'
+    else
+      fxd.start
+    end
+  rescue StandardError => e
+    logger.error [e.to_s, e.backtrace].flatten.join("\n\t")
+  rescue Object => e
+    logger.error "Unexpected Exception: #{e.inspect}"
+  end
+end
+
+main
+
