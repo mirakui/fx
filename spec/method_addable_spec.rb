@@ -24,7 +24,7 @@ FruitSpecArgsSample = [
   }
 ]
 
-describe MethodAddable, "を継承したclass Fruitを定義したとき" do
+describe Gena::MethodAddable, "を継承したclass Fruitを定義したとき" do
 
   it "メソッドcolor(:apple),price(:apple)を追加できること" do
     Fruit.add(*FruitSpecArgsSample)
@@ -42,7 +42,7 @@ describe MethodAddable, "を継承したclass Fruitを定義したとき" do
 
 end
 
-describe MethodAddable, "を継承したclass Fruitのインスタンスを作成したとき" do
+describe Gena::MethodAddable, "を継承したclass Fruitのインスタンスを作成したとき" do
 
   before do
     Fruit.add(*FruitSpecArgsSample)

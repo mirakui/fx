@@ -1,4 +1,3 @@
-$: << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'mechanize'
 require 'loggable'
 require 'method_addable'
@@ -16,6 +15,7 @@ class Sbi < Gena::MethodAddable
     }
     @agent = WWW::Mechanize.new
     @agent.user_agent = USER_AGENT_MOBILE
+    @prices_buffer = nil
     #@agent.logger = logger
   end
 
@@ -27,6 +27,14 @@ class Sbi < Gena::MethodAddable
     @agent.get URI_BASE + query
   rescue => e
     logger.error [e.to_s, e.backtrace].flatten.join("/n")
+  end
+
+  def prices
+    @prices_buffer || reload_prices
+  end
+
+  def reload_prices
+    parse(:pboard)
   end
 
   def self.location(sym, *procs)
@@ -86,7 +94,7 @@ class Sbi < Gena::MethodAddable
         price_pair = b.text.strip.split('-')
         prices[meigaras[i]] = {:bid => price_pair[0].to_f, :ask => price_pair[1].to_f}
       end
-      prices
+      @prices_buffer = prices
     }
 
   def retry_on(sym)
@@ -113,9 +121,4 @@ class Sbi < Gena::MethodAddable
   end
 
 end
-
-__END__
-sbi = Sbi.new
-p sbi.parse(:pboard)
-
 
