@@ -1,4 +1,4 @@
-require 'pid_file'
+require 'gena/pid_file'
 
 module Gena
 
@@ -11,7 +11,6 @@ module Gena
     def initialize(daemon_name, pid_file_path)
       @daemon_name = daemon_name
       @pid_file = PidFile.new(pid_file_path)
-      #@pid_file = PidFile.new(File.join(File.dirname(__FILE__), '..', 'log', "#{@daemon_name}.pid"))
       @console_mode = false
     end
 

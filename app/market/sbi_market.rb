@@ -1,10 +1,10 @@
 require 'mechanize'
 require 'pit'
-require 'loggable'
-require 'method_addable'
+require 'gena/loggable'
+require 'gena/method_addable'
 require 'market'
 
-class Sbi < Market
+class SbiMarket < Market
   USER_AGENT_MOBILE = 'SoftBank/1.0/912SH/SHJ001/SN123456789012345 Browser/NetFront/3.4'
   URI_BASE = 'https://mobile.sbisec.co.jp'
 

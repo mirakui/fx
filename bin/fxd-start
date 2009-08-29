@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby1.9
-$: << File.join(File.dirname(__FILE__), '..', 'config')
-require 'environment'
+$: << File.join(File.dirname(__FILE__), '..')
+require 'config/environment'
 require 'fx_daemon'
 require 'optparse'
 
@@ -10,7 +10,7 @@ def main
 
   ARGV.options do |opt|
     opt.on('-r', '--recipe [RECIPE_NAME]') do |recipe_name|
-      require File.join(::CONFIG_DIR, "#{recipe_name}.recipe")
+      require File.join(::RECIPE_DIR, "#{recipe_name}")
       recipe_required = true
     end
     opt.on('--debug') do
@@ -29,7 +29,6 @@ def main
   begin
     log_path = File.join(LOG_DIR, 'fxd.log')
     logger = Logger.new(console_mode ? STDOUT : log_path, 'daily')
-    #logger = Logger.new(log_path, 'daily')
     logger.level = $DEBUG ? Logger::DEBUG : Logger::INFO
 
     fxd = FxDaemon.new

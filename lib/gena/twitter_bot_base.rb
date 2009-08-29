@@ -1,7 +1,6 @@
-$: << File.dirname(__FILE__)
 require 'twitter'
 require 'time'
-require 'loggable'
+require 'gena/loggable'
 
 module Gena
   class TwitterBotException < Exception

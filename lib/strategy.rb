@@ -1,4 +1,4 @@
-require 'loggable'
+require 'gena/loggable'
 
 class Strategy
 

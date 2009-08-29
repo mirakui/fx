@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby1.9
-$: << File.join(File.dirname(__FILE__), '..', 'config')
-require 'environment'
+$: << File.join(File.dirname(__FILE__), '..')
+require 'config/environment'
 require 'fx_daemon'
 
 def main

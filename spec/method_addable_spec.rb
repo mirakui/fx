@@ -1,6 +1,7 @@
 # vim:fileencoding=utf-8
-$: << File.join(File.dirname(__FILE__), '..', 'lib')
-require 'method_addable'
+$: << File.join(File.dirname(__FILE__), '..')
+require 'config/environment'
+require 'gena/method_addable'
 
 class Fruit < Gena::MethodAddable
 

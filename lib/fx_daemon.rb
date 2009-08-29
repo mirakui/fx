@@ -1,7 +1,7 @@
-require 'environment'
-require 'loggable'
-require 'pid_file'
-require 'daemon'
+require 'config/environment'
+require 'gena/loggable'
+require 'gena/pid_file'
+require 'gena/daemon'
 
 class FxDaemon < Gena::Daemon
 

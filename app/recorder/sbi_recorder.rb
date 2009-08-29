@@ -1,11 +1,8 @@
-$: << File.join(File.dirname(__FILE__), '..', 'config')
-require 'environment'
-
+require 'config/environment'
 require 'date'
 require 'market_recorder'
-require 'sbi'
 
-class SbiRecorder < MarketRecorder
+class FileRecorder < MarketRecorder
 
   def initialize(sbi)
     @sbi = sbi
