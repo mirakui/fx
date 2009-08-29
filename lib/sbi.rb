@@ -50,7 +50,8 @@ class Sbi < Market
     def get(query)
       @agent.get URI_BASE + query
     rescue => e
-      logger.error [e.to_s, e.backtrace].flatten.join("/n")
+      #logger.error [e.to_s, e.backtrace].flatten.join("/n")
+      raise e
     end
 
     def self.location(sym, *procs)

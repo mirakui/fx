@@ -5,8 +5,10 @@ require 'daemon'
 
 class FxDaemon < Gena::Daemon
 
-  DAEMON_NAME   = 'fxd'
-  PID_FILE_PATH = File.join(::LOG_DIR, "#{DAEMON_NAME}.pid")
+  DAEMON_NAME     = 'fxd'
+  PID_FILE_PATH   = File.join(::LOG_DIR, "#{DAEMON_NAME}.pid")
+  RETRY_SLEEP     = 3
+  RETRY_COUNT_MAX = 5
 
   def initialize
     super(DAEMON_NAME, PID_FILE_PATH)
@@ -19,12 +21,25 @@ class FxDaemon < Gena::Daemon
     @trader          = ::TRADER_CLASS.new
     @strategy        = ::STRATEGY_CLASS.new @trader
 
+    retry_count = 0
     loop do
-      reload
-      record
-      calc
-      break if main_break_condition
-      sleep ::MARKET_FREQUENCY_SECOND
+      begin
+        if retry_count > RETRY_COUNT_MAX
+          logger.error "Retry count max (#{RETRY_COUNT_MAX})"
+          break
+        end
+        reload
+        record
+        calc
+        break if main_break_condition
+        sleep ::MARKET_FREQUENCY_SECOND
+        retry_count = 0
+      rescue
+        retry_count += 1
+        logger.warn "Retry after sleep #{RETRY_SLEEP} sec (#{retry_count}/#{RETRY_COUNT_MAX})"
+        sleep RETRY_SLEEP
+        retry
+      end
     end
     logger.debug "Finished run"
   end
