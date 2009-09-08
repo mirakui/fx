@@ -4,8 +4,11 @@ class Strategy
 
   include Gena::Loggable
 
-  def initialize(trader)
+  attr_accessor :trader, :params
+
+  def initialize(trader,params={})
     @trader = trader
+    @params = params
   end
 
   def calc(price)

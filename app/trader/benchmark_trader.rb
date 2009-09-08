@@ -44,6 +44,7 @@ class BenchmarkTrader < Trader
     buy_count          = 0
     sell_count         = 0
     @histories.each do |his|
+      next unless his[:action_type] == :clear
       if his[:profit] >= 0.0
         took_profit_count += 1
       else

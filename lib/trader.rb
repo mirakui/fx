@@ -4,11 +4,11 @@ class Trader
 
   include Gena::Loggable
 
-  def buy
+  def order(currency, position_type, trade_unit)
     raise 'must be overriden'
   end
 
-  def sell
+  def clear(currency, position_type, trade_unit)
     raise 'must be overriden'
   end
 

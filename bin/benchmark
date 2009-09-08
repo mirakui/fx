@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby1.9
+$: << File.join(File.dirname(__FILE__), '..')
+require 'config/environment'
+require 'optparse'
+require 'trader/benchmark_trader'
+
+def main
+  strategy_class  = nil
+  prices          = nil
+
+  ARGV.options do |opt|
+    opt.on('-s', '--strategy [STRATEGY_NAME]') do |strategy_name|
+      strategy_name += '_strategy'
+      require File.join(::STRATEGY_DIR, strategy_name)
+      strategy_class = eval(strategy_name.split('_').map{|m|m.capitalize}.join)
+    end
+    opt.on('-f', '--price-file [FILE_PATH]') do |file|
+      puts file
+      prices = load_prices_from_file(file)
+    end
+    opt.on('-d', '--debug') do
+      $DEBUG = true
+    end
+    opt.on('-b', '--benchmark [FILE_PATH]') do |file|
+    end
+    opt.on('--reverse') do
+    end
+    opt.order!
+    unless strategy_class && prices
+      STDERR.puts opt.help
+      exit 1
+    end
+  end
+
+  trader   = BenchmarkTrader.new
+  strategy = strategy_class.new(trader)
+
+  prices.each do |price|
+    strategy.calc(price)
+  end
+
+  trader.print_statistics
+end
+
+def load_prices_from_file(file_path)
+  prices = []
+  open(file_path) do |f|
+    while (line = f.gets)
+      updated_at, bid, ask = line.split("\t")
+      prices << {:updated_at => updated_at, :bid => bid.to_f, :ask => ask.to_f}
+    end
+  end
+  prices
+end
+
+main
+

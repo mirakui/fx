@@ -1,11 +1,12 @@
 # vim:fileencoding=utf-8
-$: << File.join(File.dirname(__FILE__), '..', 'lib')
-require 'sbi'
+$: << File.join(File.dirname(__FILE__), '..')
+require 'config/environment'
+require 'market/sbi_market'
 
-describe Sbi, "においてpboardページで相場情報を取得したとき" do
+describe SbiMarket, "においてpboardページで相場情報を取得したとき" do
 
   before do
-    @sbi = Sbi.new
+    @sbi = SbiMarket.new
     @prices = @sbi.reload_prices
   end
 
